@@ -1,3 +1,24 @@
+cmake_minimum_required(VERSION 3.5.0)
+project(ecl-python)
+
+if (SKBUILD)
+  # invoked as a part of scikit-build, so this is just a proxy for the python
+  # extension cmake. this works around the fundamental limitation in cmake
+  # that it looks only for directories with a CMakeLists.txt in it, not for a
+  # named file
+  include(setup-CMakeLists.txt)
+  return ()
+endif ()
+
+if (ENABLE_PYTHON_MODULE)
+  include(module-CMakeLists.txt)
+  return ()
+endif ()
+
+if (NOT ENABLE_PYTHON)
+  return ()
+endif ()
+
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
 include(init_python)
 init_python( 2.7 )

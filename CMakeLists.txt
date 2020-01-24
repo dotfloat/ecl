@@ -76,6 +76,7 @@ option( BUILD_APPLICATIONS  "Should we build small utility applications"        
 option( BUILD_ECL_SUMMARY   "Build the commandline application ecl_summary"           OFF)
 option( BUILD_PYTHON        "Run py_compile on the python wrappers"                   OFF)
 option( ENABLE_PYTHON       "Build and install the Python wrappers"                   OFF)
+option( ENABLE_PYTHON_MODULE "Build and install libecl as a Python module"            OFF)
 option( BUILD_SHARED_LIBS   "Build shared libraries"                                  ON )
 option( ERT_USE_OPENMP      "Use OpenMP"                                              OFF )
 option( RST_DOC             "Build RST documentation"                                 OFF)
@@ -362,19 +363,13 @@ if (ENABLE_PYTHON AND ERT_WINDOWS)
     endif()
 endif()
 
-if (ENABLE_PYTHON)
-    # If finding the Python interpreter and required packages
-    # fails in the python/CMakeLists.txt file the ENABLE_PYTHON
-    # will be set to OFF.
-    add_subdirectory( python )
+if (NOT ENABLE_PYTHON_MODULE)
+  install(EXPORT ecl-config DESTINATION share/cmake/ecl)
 endif()
-
-if (ENABLE_PYTHON)
-   if (NOT ${BUILD_SHARED_LIBS})
-      message(FATAL_ERROR "The Python wrappers require shared libraries")
-   endif()
-endif()
-
-install(EXPORT ecl-config DESTINATION share/cmake/ecl)
 export(TARGETS ecl FILE eclConfig.cmake)
 export(PACKAGE ecl)
+
+if (ENABLE_PYTHON)
+  set(BUILD_SHARED_LIBS ON)
+endif()
+add_subdirectory( python )

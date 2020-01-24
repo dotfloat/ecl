@@ -72,7 +72,12 @@ required_version_hex = 0x02070000
 
 ecl_lib_path = None
 ert_so_version = ""
-__version__ = "0.0.0"
+
+try:
+    from ecl._ecl import libecl_handle, __version__
+except ImportError:
+    __version__ = "0.0.0"
+    libecl_handle = None
 
 
 # 1. Try to load the __ecl_lib_info module; this module has been
@@ -115,6 +120,10 @@ if sys.hexversion < required_version_hex:
     raise Exception("ERT Python requires Python 2.7.")
 
 def load(name):
+    if libecl_handle:
+        import ctypes
+        return ctypes.PyDLL(None, ctypes.RTLD_GLOBAL, handle=libecl_handle)
+
     try:
         return cwrapload(name, path=ecl_lib_path, so_version=ert_so_version)
     except ImportError:

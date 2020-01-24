@@ -6,21 +6,39 @@ python:
 os:
   - linux
 
-sudo: required
+compiler:
+  - gcc
+
 services: docker
+sudo: required
 
 env:
   global:
     - ERT_SHOW_BACKTRACE=1
     - MB_PYTHON_VERSION=$TRAVIS_PYTHON_VERSION
-  matrix:
-    - TEST_SUITE="-LE SLOW"  # Run all tests not labeled as slow
-    - TEST_SUITE="-L SLOW_1" # Run all tests labeled as SLOW in group 1
-    - TEST_SUITE="-L SLOW_2" # Run all tests labeled as SLOW in group 2
+    - SCRIPT=.travis_script.sh
+  # matrix:
+  #   - TEST_SUITE="-LE SLOW"  # Run all tests not labeled as slow
+  #   - TEST_SUITE="-L SLOW_1" # Run all tests labeled as SLOW in group 1
+  #   - TEST_SUITE="-L SLOW_2" # Run all tests labeled as SLOW in group 2
+
+addons:
+  apt:
+    packages:
+      - liblapack-dev
 
 matrix:
   fast_finish: true
   include:
+    - os: linux
+      compiler: clang
+      env:
+        - MATRIX_EVAL="CC=clang; CXX=clang++"
+        - SCAN="scan-build --status-bugs"
+        - SCRIPT=.travis_pip.sh
+        - DEPLOY=1
+    - os: linux
+      compiler:
     - os: osx
       language: generic
       python: 2.7
@@ -34,36 +52,39 @@ matrix:
         - MB_PYTHON_VERSION=3.6
         - TEST_SUITE=""
 
-addons:
-  apt:
-    packages:
-    - liblapack-dev
-
 before_install:
+  - eval "${MATRIX_EVAL}"
   - unset -f pushd
   - unset -f popd
   - source multibuild/common_utils.sh
   - source multibuild/travis_steps.sh
   - before_install
 
-install:
-  - pip install -r requirements.txt
-
-script:
+before_script:
   - mkdir build
   - pushd build
-  - cmake .. -DBUILD_TESTS=ON
-             -DENABLE_PYTHON=ON
-             -DBUILD_APPLICATIONS=ON
-             -DINSTALL_ERT_LEGACY=ON
-             -DERT_USE_OPENMP=ON
-             -DCMAKE_C_FLAGS='-Werror=all'
-             -DCMAKE_CXX_FLAGS='-Werror -Wno-unused-result'
-  - make
-  - sudo make install
-  - which python
-  - export PYTHONPATH="/usr/local/lib/python$MB_PYTHON_VERSION/site-packages:/usr/local/lib/python$MB_PYTHON_VERSION/dist-packages:$PYTHONPATH"
-  - python -c "import sys; print('\n'.join(sys.path))"
-  - set -e; python -c "import ecl"; set +e
-  - ctest --output-on-failure $TEST_SUITE
+  - $SCAN cmake -DCMAKE_BUILD_TYPE=Release
+
+install:
+  - pip install --upgrade -r python/requirements-dev.txt
+
+script:
+  - "./${SCRIPT}"
+
+before_deploy:
+  - pushd python
+
+after_deploy:
   - popd
+
+deploy:
+  - provider: pypi
+    skip_cleanup: true
+    skip_upload_docs: true
+    user: __token__
+    distributions: --skip-cmake build
+    password:
+      secure: e47oVpLRu9A3mg0z/JKJC3duxxgz7iqDTtuO8AxesQfJxJeEX/SMUgflpSAMLe1OF3d7F3OME8yfffs0BNRmLzhKwqFncuEsguXiy1E47dPLAR+ALmt52j0+sbnrSih7HuS4yJ+FnSMKDtN5KmtpI04ubIU9lzsfBTDaIbDOJZ8IUHnZGBasS+fUjzsarPlOvKLaKCCIjHn2uwHkF4LBJUGqZqgjndHiwpmHBbAShekOpSmQfeqBN1sGrkEeu5eOaeZLmKozHmHBd2tjOUZyJl6whwhafB7+bo6XkoLHnabWGwk0dJZ+r5KroXtIFjP95loOh/Cora6WxFCLcxQezTGilNBckQ0DN3oJmUdQ35sTabXEvfqUV1Jx15utaZFYKzZvr6tX1wR8VTxmko1n/uCmKogODERFQ+qp+7gZT/JGcMjn72v5lTbjwvNWzyVP6oqkv/HdiJi4ZSkABylfW89941Xv9+keaXbpF/h/U/QLyGivNb+v404muyQpv8lSq94PObf1jQgmozvej0V3lj74YSMD4Q4VPqi6bP8xT13HfzUXIT8OsFf4NEPfubsUXkuhhtVxB+/prigXSHcKz6ScuIUVDQo8wZSiEKVWipyqu3DVIYgr7LhDcZS+obM3e/LctdHYm71wEyZaSideHVgwypuw1mkHrAQFsJvzlow=
+    on:
+      tags: true
+      condition: -z $DEPLOY

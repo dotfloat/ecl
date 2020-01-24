@@ -1,6 +1,4 @@
-project(libecl-ecl C CXX)
-
-
+set(DLISIO_LIB_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR} CACHE PATH "")
 
 if (HAVE_BACKTRACE)
     list(APPEND opt_srcs util/util_abort_gnu.c)
@@ -209,6 +207,9 @@ install(DIRECTORY include/
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include/
         DESTINATION include
 )
+export(TARGETS ecl
+  NAMESPACE ecl::
+  FILE ecl-config.cmake)
 
 if (NOT BUILD_TESTS)
     return ()

@@ -1,0 +1,27 @@
+cmake_minimum_required(VERSION 3.5.0)
+project(dlisio-python-extension LANGUAGES C CXX)
+
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_VISIBILITY_PRESET "hidden")
+set(CMAKE_C_VISIBILITY_PRESET   "hidden")
+
+find_package(PythonExtensions REQUIRED)
+find_package(ecl REQUIRED)
+
+add_library(_ecl MODULE ecl/ext/lib.cpp)
+target_include_directories(_ecl
+  PRIVATE
+  ${PYBIND11_INCLUDE_DIRS}
+  )
+python_extension_module(_ecl)
+target_link_libraries(_ecl ecl::ecl)
+
+if (MSVC)
+  target_compile_options(_ecl
+    BEFORE
+    PRIVATE
+    /EHsc
+    )
+endif ()
+
+install(TARGETS _ecl LIBRARY DESTINATION ecl)

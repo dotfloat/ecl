@@ -18,6 +18,7 @@ import random
 import warnings
 import cwrap
 import random
+import pytest
 
 from ecl import EclDataType, EclTypeEnum, EclFileFlagEnum
 from ecl.eclfile import EclKW, EclFile, FortIO, openFortIO
@@ -37,6 +38,7 @@ def copy_offset():
     copy = src.sub_copy(200, 100)
 
 
+@pytest.mark.slow_2
 class KWTest(EclTest):
 
     def test_name(self):

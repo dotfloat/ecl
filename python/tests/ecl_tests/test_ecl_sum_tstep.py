@@ -1,11 +1,13 @@
-from datetime import datetime
 import random
+import unittest
+
+from datetime import datetime
 from ecl.ecl import EclSumTStep, EclSum
 from tests import EclTest
 
 
 class EclSumTStepTest(EclTest):
-
+    @unittest.skip("Unused test")
     def test_creation(self):
         ecl_sum = EclSum.writer("TEST", datetime(2010, 1, 1), 10, 10, 10)
         ecl_sum.addVariable("FOPT")

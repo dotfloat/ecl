@@ -20,6 +20,7 @@ import operator
 import random
 import numpy
 import six
+import pytest
 
 from ecl import EclDataType
 from ecl.eclfile import EclKW
@@ -38,6 +39,8 @@ def generate_ijk_bounds(dims):
 def decomposition_preserving(ijk_bound):
     return sum(list(zip(*ijk_bound))[0]) % 2 is 0
 
+
+@pytest.mark.slow_2
 class GridGeneratorTest(EclTest):
 
     def setUp(self):

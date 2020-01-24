@@ -16,6 +16,8 @@
 #  for more details.
 import os.path
 import six
+import pytest
+
 from unittest import skipIf, skip
 import time
 import itertools
@@ -124,6 +126,7 @@ def average(points):
 # This test class should only have test cases which do not require
 # external test data. Tests involving Equinor test data are in the
 # test_grid_equinor module.
+@pytest.mark.slow_1
 class GridTest(EclTest):
 
     def test_oom_grid(self):

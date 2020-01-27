@@ -56,8 +56,11 @@ with open("README.md") as f:
 
 skbuild.setup(
     name="libecl",
+    author="Equinor ASA",
+    author_email="zom@equinor.com",
     description="Package for reading and writing the result files from the ECLIPSE reservoir simulator",
     long_description=long_description,
+    long_description_content_type="text/markdown",
     url="https://github.com/equinor/libecl",
     packages=setuptools.find_packages(where='python', exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
     package_dir={"": "python"},
@@ -98,5 +101,22 @@ skbuild.setup(
     # skbuild's test imples develop, which is pretty obnoxious instead, use a
     # manually integrated pytest.
     cmdclass={"test": setuptools.command.test.test},
-    **getversion()
+    classifiers=[
+        "Development Status :: 1 - Planning",
+        "Environment :: Other Environment",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Science/Research",
+        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+        "Natural Language :: English",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "Topic :: Scientific/Engineering",
+        "Topic :: Scientific/Engineering :: Physics",
+        "Topic :: Software Development :: Libraries",
+        "Topic :: Utilities"
+    ],
+    # **getversion(),
+    version='2.6.0'
 )

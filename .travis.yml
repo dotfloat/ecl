@@ -1,7 +1,13 @@
 language: python
 python:
+<<<<<<< HEAD
 - 2.7
 - 3.6
+=======
+#  - 2.7
+  - 3.6
+
+>>>>>>> 6c9ca3f62760a71fb1825c19e44e5c5309208737
 os:
 - linux
 compiler:
@@ -20,27 +26,28 @@ addons:
 matrix:
   fast_finish: true
   include:
-  - os: linux
-    compiler: clang
-    env:
-    - MATRIX_EVAL="CC=clang; CXX=clang++"
-    - SCAN="scan-build --status-bugs"
-    - SCRIPT=.travis_pip.sh
-    - DEPLOY=1
-  - os: linux
-    compiler: 
-  - os: osx
-    language: generic
-    python: 2.7
-    env:
-    - MB_PYTHON_VERSION=2.7
-    - TEST_SUITE=""
-  - os: osx
-    language: generic
-    python: 3.6
-    env:
-    - MB_PYTHON_VERSION=3.6
-    - TEST_SUITE=""
+    - os: linux
+      compiler: clang
+      env:
+        - MATRIX_EVAL="CC=clang; CXX=clang++"
+        - SCAN="scan-build --status-bugs"
+        - SCRIPT=.travis_pip.sh
+        - DEPLOY=1
+    #- os: linux
+    #  compiler:
+    #- os: osx
+    #  language: generic
+    #  python: 2.7
+    #  env:
+    #    - MB_PYTHON_VERSION=2.7
+    #    - TEST_SUITE=""
+    #- os: osx
+    #  language: generic
+    #  python: 3.6
+    #  env:
+    #    - MB_PYTHON_VERSION=3.6
+    #    - TEST_SUITE=""
+
 before_install:
 - eval "${MATRIX_EVAL}"
 - unset -f pushd
@@ -65,12 +72,11 @@ deploy:
   - provider: pypi
     skip_cleanup: true
     skip_upload_docs: true
+    distributions: "sdist bdist_wheel"
+    server: https://test.pypi.org/index
     user: __token__
-    distributions: "--skip-cmake build"
     password:
-      secure: e47oVpLRu9A3mg0z/JKJC3duxxgz7iqDTtuO8AxesQfJxJeEX/SMUgflpSAMLe1OF3d7F3OME8yfffs0BNRmLzhKwqFncuEsguXiy1E47dPLAR+ALmt52j0+sbnrSih7HuS4yJ+FnSMKDtN5KmtpI04ubIU9lzsfBTDaIbDOJZ8IUHnZGBasS+fUjzsarPlOvKLaKCCIjHn2uwHkF4LBJUGqZqgjndHiwpmHBbAShekOpSmQfeqBN1sGrkEeu5eOaeZLmKozHmHBd2tjOUZyJl6whwhafB7+bo6XkoLHnabWGwk0dJZ+r5KroXtIFjP95loOh/Cora6WxFCLcxQezTGilNBckQ0DN3oJmUdQ35sTabXEvfqUV1Jx15utaZFYKzZvr6tX1wR8VTxmko1n/uCmKogODERFQ+qp+7gZT/JGcMjn72v5lTbjwvNWzyVP6oqkv/HdiJi4ZSkABylfW89941Xv9+keaXbpF/h/U/QLyGivNb+v404muyQpv8lSq94PObf1jQgmozvej0V3lj74YSMD4Q4VPqi6bP8xT13HfzUXIT8OsFf4NEPfubsUXkuhhtVxB+/prigXSHcKz6ScuIUVDQo8wZSiEKVWipyqu3DVIYgr7LhDcZS+obM3e/LctdHYm71wEyZaSideHVgwypuw1mkHrAQFsJvzlow=
+      secure: cZE0yn4nPhJfgD+D8VFY7tn7arJCOxHidRX/2NP3PTs72chrudtDHR6sPu/sAKVEQ4bKvFjT3OeBkZFgiTYNtDfrkTdawwaeIgdPodgLATWLcbf3iQwBtGUpgM3aPqZDFNukNa91ddU7ESo/Xx1vHDAJ6rBGrG+luPDL4GR9WmyoS4Cro0aHQPlcU4uGekSQyDRotGq03ZxtQrX+5qlLiYolbWmf2xH7+RY5d2DtspLahvi7c9QqZzq43McuU+1Khraoxed/yXoFTEMHIuZ+xeXoe+d5zgPlS/sfw3pVmfSesbP7ttKkMUmxF+8stliDqI4//n4y8GXz5XE12mhUqxVX67SrTmA6Pd5BYIg8ZUD+dv9vfmdI6UyfIXBynQfCk6chQUoF4LhuirOeMucJ6+xpFxRmkM/APKPijMYCS7zGucGbWTPcwNgwFcJxYqiReM9GhKZuuywbJA7lUz/hdXW27KJVvYrfFjVWkL2cb46ol7SZYLWEBNtyGeCfwroHp1uSM4/St7NLYJiYmS1E2tF+DvHuppw8pa4mhZTDR3XI69E1oFeLTbrWSANWfWZvew0s0LVfO7ba3a7u79uDc7/lHZrF4KNu3CQxpUc38ZlGaONXa5YKTl5cBKTya9EV6qJWEcaVhyT6OOF/S/Jud1FKBX9iz1MMPbHDkbwXR/s=
     on:
       tags: true
       condition: "-z $DEPLOY"
-  password:
-    secure: cZE0yn4nPhJfgD+D8VFY7tn7arJCOxHidRX/2NP3PTs72chrudtDHR6sPu/sAKVEQ4bKvFjT3OeBkZFgiTYNtDfrkTdawwaeIgdPodgLATWLcbf3iQwBtGUpgM3aPqZDFNukNa91ddU7ESo/Xx1vHDAJ6rBGrG+luPDL4GR9WmyoS4Cro0aHQPlcU4uGekSQyDRotGq03ZxtQrX+5qlLiYolbWmf2xH7+RY5d2DtspLahvi7c9QqZzq43McuU+1Khraoxed/yXoFTEMHIuZ+xeXoe+d5zgPlS/sfw3pVmfSesbP7ttKkMUmxF+8stliDqI4//n4y8GXz5XE12mhUqxVX67SrTmA6Pd5BYIg8ZUD+dv9vfmdI6UyfIXBynQfCk6chQUoF4LhuirOeMucJ6+xpFxRmkM/APKPijMYCS7zGucGbWTPcwNgwFcJxYqiReM9GhKZuuywbJA7lUz/hdXW27KJVvYrfFjVWkL2cb46ol7SZYLWEBNtyGeCfwroHp1uSM4/St7NLYJiYmS1E2tF+DvHuppw8pa4mhZTDR3XI69E1oFeLTbrWSANWfWZvew0s0LVfO7ba3a7u79uDc7/lHZrF4KNu3CQxpUc38ZlGaONXa5YKTl5cBKTya9EV6qJWEcaVhyT6OOF/S/Jud1FKBX9iz1MMPbHDkbwXR/s=

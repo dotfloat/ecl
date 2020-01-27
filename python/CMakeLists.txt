@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5.0)
+cmake_minimum_required( VERSION 2.8.12 )
 project(ecl-python)
 
 if (SKBUILD)
@@ -7,11 +7,6 @@ if (SKBUILD)
   # that it looks only for directories with a CMakeLists.txt in it, not for a
   # named file
   include(setup-CMakeLists.txt)
-  return ()
-endif ()
-
-if (ENABLE_PYTHON_MODULE)
-  include(module-CMakeLists.txt)
   return ()
 endif ()
 

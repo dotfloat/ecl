@@ -196,20 +196,24 @@ set_target_properties(ecl PROPERTIES
                           VERSION ${ECL_VERSION_MAJOR}.${ECL_VERSION_MINOR}
                           SOVERSION ${ECL_VERSION_MAJOR})
 
-install(TARGETS ecl
-        EXPORT  ecl-config
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(DIRECTORY include/
-        DESTINATION include
-)
-install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include/
-        DESTINATION include
-)
-export(TARGETS ecl
-  NAMESPACE ecl::
-  FILE ecl-config.cmake)
+if (SKBUILD)
+  install(TARGETS ecl LIBRARY DESTINATION "python/ecl/.libs")
+else()
+    install(TARGETS ecl
+            EXPORT  ecl-config
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+    install(DIRECTORY include/
+            DESTINATION include
+    )
+    install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include/
+            DESTINATION include
+    )
+    export(TARGETS ecl
+      NAMESPACE ecl::
+      FILE ecl-config.cmake)
+endif ()
 
 if (NOT BUILD_TESTS)
     return ()

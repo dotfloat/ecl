@@ -18,7 +18,7 @@ class get_pybind_include(object):
 
 def src(x):
     root = os.path.dirname(__file__)
-    return os.path.abspath(os.path.join(root, x))
+    return os.path.abspath(os.path.join(root, "python", x))
 
 
 def getversion():
@@ -37,7 +37,7 @@ def getversion():
 
     import ast
 
-    with open(versionfile) as f:
+    with open(os.path.join("python", versionfile)) as f:
         root = ast.parse(f.read())
 
     for node in ast.walk(root):
@@ -51,20 +51,34 @@ def getversion():
 
 pybind_includes = [str(get_pybind_include()), str(get_pybind_include(user=True))]
 
+with open("README.md") as f:
+    long_description = f.read()
+
 skbuild.setup(
     name="libecl",
-    description="libecl",
-    long_description="libecl",
+    description="Package for reading and writing the result files from the ECLIPSE reservoir simulator",
+    long_description=long_description,
     url="https://github.com/equinor/libecl",
-    packages=["ecl", "ert"],
+    packages=setuptools.find_packages(where='python', exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
+    package_dir={"": "python"},
     license="GPL-3.0",
     platforms="any",
-    install_requires=["numpy"],
+    install_requires=[
+        "cwrap",
+        "numpy==1.16.6",
+        "pandas<=0.25.3",
+        "future",
+        "six",
+        "functools32;python_version=='2.7'"
+    ],
     setup_requires=[
-        "setuptools >= 28",
-        "pybind11 >= 2.3",
+        "setuptools",
+        "pybind11",
         "setuptools_scm",
         "pytest-runner",
+        "sphinx;python_version>='3.5'",
+        "cmake",
+        "ninja"
     ],
     tests_require=["pytest"],
     # we're building with the pybind11 fetched from pip. Since we don't rely on
@@ -72,6 +86,9 @@ skbuild.setup(
     # instead, the get include dirs from the package and give directly from
     # here
     cmake_args=[
+        "-DCMAKE_SKIP_BUILD_RPATH:BOOL=FALSE",
+        "-DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=TRUE",
+        "-DCMAKE_INSTALL_RPATH=$ORIGIN/.libs",
         "-DPYBIND11_INCLUDE_DIRS=" + ";".join(pybind_includes),
         # we can safely pass OSX_DEPLOYMENT_TARGET as it's ignored on
         # everything not OS X. We depend on C++11, which makes our minimum

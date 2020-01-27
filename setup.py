@@ -76,6 +76,7 @@ skbuild.setup(
     ],
     setup_requires=[
         "setuptools",
+        "scikit-build",
         "pybind11",
         "setuptools_scm",
         "pytest-runner",
@@ -118,5 +119,5 @@ skbuild.setup(
         "Topic :: Utilities"
     ],
     # **getversion(),
-    version='2.6.0'
+    version='2.6.1'
 )

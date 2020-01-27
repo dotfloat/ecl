@@ -8,6 +8,7 @@
 *.user.*
 .idea
 python/lib64
+python/ecl/.lib64
 /libenkf/src/.faultlist
 /develbranch/libenkf/src/.faultlist
 /build

@@ -119,5 +119,5 @@ skbuild.setup(
         "Topic :: Utilities"
     ],
     # **getversion(),
-    version='2.6.1'
+    version='2.6.post4'
 )

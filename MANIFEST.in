@@ -1,7 +1,8 @@
-include README.md COPYING
+include README.md COPYING pyproject.toml
 global-include CMakeLists.txt *.cmake
 recursive-include external/catch2 *
 recursive-include lib *
 recursive-include applications *
 recursive-include bin *
 recursive-include cmake *
+include python/ecl/ext/*.cpp

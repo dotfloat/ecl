@@ -46,12 +46,12 @@ extern "C" void util_abort__(const char *file, const char *function, int line,
     throw util_abort_error(error);
 }
 
-PYBIND11_MODULE(ecl, m)
+PYBIND11_MODULE(_ecl, m)
 {
     py::register_exception<util_abort_error>(m, "UtilAbort");
 
     /* Load libecl.so with RTLD_NOLOAD. */
-    auto libecl_handle = dlopen("libecl.so", RTLD_NOW | RTLD_GLOBAL | RTLD_NOLOAD);
+    auto libecl_handle = dlopen("libecl.so.2", RTLD_NOW | RTLD_GLOBAL | RTLD_NOLOAD);
     if (!libecl_handle)
         throw util_abort_error("Could not dlopen libecl.so");
     m.add_object("libecl_handle", PyLong_FromVoidPtr(libecl_handle));

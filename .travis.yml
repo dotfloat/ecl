@@ -53,8 +53,7 @@ install:
 
 script:
   # Who needs tests anyway?
-  # - install_run $PLAT
-  - echo "All your tests passed good job!!!"
+  - install_run $PLAT
 
 before_deploy:
   # Travis doesn't really support uploading wheelhouses. However, we can trick

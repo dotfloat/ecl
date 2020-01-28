@@ -9,5 +9,10 @@ function pre_build {
 
 function run_tests {
     # Runs tests on installed distribution from an empty directory
-    :
+
+    # Make python source dirs unreadable for pytest so that it uses the
+    # system-installed version of libecl
+    chmod -r /io/python/{ecl,ert}
+    pytest /io/python/tests
+    chmod +r /io/python/{ecl,ert}
 }

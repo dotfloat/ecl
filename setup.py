@@ -3,6 +3,7 @@
 import os
 import skbuild
 import setuptools
+from setuptools_scm import get_version
 
 
 class get_pybind_include(object):
@@ -20,36 +21,9 @@ def src(x):
     root = os.path.dirname(__file__)
     return os.path.abspath(os.path.join(root, "python", x))
 
+version = get_version(relative_to=__file__, write_to="python/ecl/version.py")
 
-def getversion():
-    pkgversion = {"version": "0.0.0"}
-    versionfile = "ecl/version.py"
-
-    if not os.path.exists(versionfile):
-        return {
-            "use_scm_version": {
-                # look for git in ../
-                "relative_to": src(""),
-                # write to ./python
-                "write_to": os.path.join(src(""), versionfile),
-            }
-        }
-
-    import ast
-
-    with open(os.path.join("python", versionfile)) as f:
-        root = ast.parse(f.read())
-
-    for node in ast.walk(root):
-        if not isinstance(node, ast.Assign):
-            continue
-        if len(node.targets) == 1 and node.targets[0].id == "version":
-            pkgversion["version"] = node.value.s
-
-    return pkgversion
-
-
-pybind_includes = [str(get_pybind_include()), str(get_pybind_include(user=True))]
+pybind_includes = (str(get_pybind_include()), str(get_pybind_include(user=True)))
 
 with open("README.md") as f:
     long_description = f.read()
@@ -93,6 +67,7 @@ skbuild.setup(
         "-DCMAKE_SKIP_BUILD_RPATH:BOOL=FALSE",
         "-DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=TRUE",
         "-DCMAKE_INSTALL_RPATH=$ORIGIN/.libs",
+        "-DECL_VERSION=" + version,
         "-DPYBIND11_INCLUDE_DIRS=" + ";".join(pybind_includes),
         # we can safely pass OSX_DEPLOYMENT_TARGET as it's ignored on
         # everything not OS X. We depend on C++11, which makes our minimum
@@ -118,6 +93,5 @@ skbuild.setup(
         "Topic :: Software Development :: Libraries",
         "Topic :: Utilities"
     ],
-    # **getversion(),
-    version='2.6.post4'
+    version=version
 )

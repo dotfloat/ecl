@@ -1,7 +1,6 @@
 language: python
 
 python:
-  - 2.7
   - 3.6
 
 os:
@@ -38,6 +37,8 @@ env:
 
 matrix:
   fast_finish: true
+  exclude:
+    - python: 3.5
   include:
     - os: linux
       env:

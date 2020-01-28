@@ -31,7 +31,7 @@ warnings.simplefilter("always", DeprecationWarning)  # see #1437
 
 from cwrap import Prototype
 
-from ecl._ecl import libecl_handle, __version__
+from ._ecl import libecl_handle, __version__
 
 
 class EclPrototype(Prototype):

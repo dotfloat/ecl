@@ -63,6 +63,7 @@ before_deploy:
   # Travis doesn't really support uploading wheelhouses. However, we can trick
   # it by moving the wheelhouse directory to dist/, whose contents travis will
   # happily upload to PyPI
+  - deactivate
   - mv wheelhouse dist
 
   # Make a source distribution for good measure

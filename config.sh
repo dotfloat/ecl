@@ -12,7 +12,7 @@ function run_tests {
 
     # Make python source dirs unreadable for pytest so that it uses the
     # system-installed version of libecl
-    chmod -r /io/python/{ecl,ert}
+    chmod 0000 /io/python/{ecl,ert}
     pytest /io/python/tests
-    chmod +r /io/python/{ecl,ert}
+    chmod 0755 /io/python/{ecl,ert}
 }

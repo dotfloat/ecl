@@ -76,7 +76,7 @@ deploy:
     skip_existing: true
     skip_upload_docs: true
     skip_cleanup: true
-    server: https://test.pypi.org/index
+    server: https://test.pypi.org/legacy/
     user: __token__
     password:
       secure: cZE0yn4nPhJfgD+D8VFY7tn7arJCOxHidRX/2NP3PTs72chrudtDHR6sPu/sAKVEQ4bKvFjT3OeBkZFgiTYNtDfrkTdawwaeIgdPodgLATWLcbf3iQwBtGUpgM3aPqZDFNukNa91ddU7ESo/Xx1vHDAJ6rBGrG+luPDL4GR9WmyoS4Cro0aHQPlcU4uGekSQyDRotGq03ZxtQrX+5qlLiYolbWmf2xH7+RY5d2DtspLahvi7c9QqZzq43McuU+1Khraoxed/yXoFTEMHIuZ+xeXoe+d5zgPlS/sfw3pVmfSesbP7ttKkMUmxF+8stliDqI4//n4y8GXz5XE12mhUqxVX67SrTmA6Pd5BYIg8ZUD+dv9vfmdI6UyfIXBynQfCk6chQUoF4LhuirOeMucJ6+xpFxRmkM/APKPijMYCS7zGucGbWTPcwNgwFcJxYqiReM9GhKZuuywbJA7lUz/hdXW27KJVvYrfFjVWkL2cb46ol7SZYLWEBNtyGeCfwroHp1uSM4/St7NLYJiYmS1E2tF+DvHuppw8pa4mhZTDR3XI69E1oFeLTbrWSANWfWZvew0s0LVfO7ba3a7u79uDc7/lHZrF4KNu3CQxpUc38ZlGaONXa5YKTl5cBKTya9EV6qJWEcaVhyT6OOF/S/Jud1FKBX9iz1MMPbHDkbwXR/s=

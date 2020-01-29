@@ -10,11 +10,17 @@ function pre_build {
 function run_tests {
     # Runs tests on installed distribution from an empty directory
 
-    # Make python source dirs unreadable for pytest so that it uses the
-    # system-installed version of libecl
-    mv {/io/python,/tmp}/ecl
-    mv {/io/python,/tmp}/ert
-    pytest /io/python/tests
-    mv {/tmp,/io/python}/ecl
-    mv {/tmp,/io/python}/ert
+    # pytest adds every directory up-to and including python/ into sys.path,
+    # meaning that "import ecl" will import python/ecl and not the installed one.
+    # This doesn't work because the _ecl.so module only exists in site-packages,
+    # so we copy directories required by the tests out into its own temporary
+    # directory.
+    mkdir -p /tmp/test-dir/{.git,python}
+    ln -s {$PWD,/tmp/test-dir}/bin
+    ln -s {$PWD,/tmp/test-dir}/lib
+    ln -s {$PWD,/tmp/test-dir}/test-data
+    cp -R {$PWD,/tmp/test-dir}/python/tests
+    pushd /tmp/test-dir
+    python -m pytest python/tests
+    popd
 }

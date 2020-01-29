@@ -70,21 +70,7 @@ install:
   - pip install pytest wheelhouse/*
 
 script:
-  # - install_run $PLAT
-
-  # pytest adds every directory up-to and including python/ into sys.path,
-  # meaning that "import ecl" will import python/ecl and not the installed one.
-  # This doesn't work because the _ecl.so module only exists in site-packages,
-  # so we copy directories required by the tests out into its own temporary
-  # directory.
-  - mkdir -p /tmp/test-dir/{.git,python}
-  - ln -s {$PWD,/tmp/test-dir}/bin
-  - ln -s {$PWD,/tmp/test-dir}/lib
-  - ln -s {$PWD,/tmp/test-dir}/test-data
-  - cp -R {$PWD,/tmp/test-dir}/python/tests
-  - pushd /tmp/test-dir
-  - python -m pytest python/tests
-  - popd
+  - install_run $PLAT
 
 before_deploy:
   # Travis doesn't really support uploading wheelhouses. However, we can trick

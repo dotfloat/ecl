@@ -17,6 +17,7 @@ import shutil
 import datetime
 import os.path
 import gc
+import unittest
 from unittest import skipIf
 
 from ecl import EclFileFlagEnum, EclDataType, EclFileEnum

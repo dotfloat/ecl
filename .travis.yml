@@ -32,14 +32,18 @@ env:
     - TEST_DEPENDS=pytest
     # amd64 fo' lyfe
     - PLAT=x86_64
-    # Tell multibuild to use manylinux2010 docker image (mostly due to cmake's
-    # pypi package not having manylinux1 wheel)
-    - MB_ML_VER=2010
 
 matrix:
   fast_finish: true
   include:
     - os: linux
+      env:
+        # Tell multibuild to use manylinux2010 docker image (mostly due to
+        # cmake's pypi package not having manylinux1 wheel)
+        - MB_ML_VER=2010
+    - os: osx
+      env:
+        - MB_PYTHON_OSX_VER=10.9
 
 before_install:
   - source multibuild/common_utils.sh
@@ -54,6 +58,12 @@ install:
 
 script:
   # - install_run $PLAT
+
+  # pytest adds every directory up-to and including python/ into sys.path,
+  # meaning that "import ecl" will import python/ecl and not the installed one.
+  # This doesn't work because the _ecl.so module only exists in site-packages,
+  # so we copy directories required by the tests out into its own temporary
+  # directory.
   - mkdir -p /tmp/test-dir/{.git,python}
   - ln -s {$PWD,/tmp/test-dir}/bin
   - ln -s {$PWD,/tmp/test-dir}/lib

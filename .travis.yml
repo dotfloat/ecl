@@ -61,7 +61,7 @@ before_install:
   # Use multibuild to build a Python wheel
   - source multibuild/common_utils.sh
   - source multibuild/travis_steps.sh
-  - pip install --upgrade pip wheel
+  #- pip install --upgrade pip wheel
   - before_install
 
 install:

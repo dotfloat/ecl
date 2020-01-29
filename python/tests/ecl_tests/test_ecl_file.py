@@ -79,6 +79,7 @@ class EclFileTest(EclTest):
                 self.assertTrue( ecl_file.has_kw("KW2"))
                 self.assertEqual(ecl_file[1], ecl_file[-1])
 
+    @unittest.skip("Docker runs as root, which means chmod 0000 doesn't do anything")  # TODO: Unskip
     def test_ecl_index(self):
         with TestAreaContext("python/ecl_file/context"):
             kw1 = EclKW( "KW1" , 100 , EclDataType.ECL_INT)

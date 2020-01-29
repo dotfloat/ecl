@@ -1,17 +1,3 @@
-language: generic
-
-compiler:
-  - gcc
-
-services: docker
-
-sudo: required
-
-addons:
-  apt:
-    packages:
-    - liblapack-dev
-
 env:
   global:
     - REPO_DIR=.
@@ -28,26 +14,42 @@ env:
     # Tell multibuild to use manylinux2010 docker image (mostly due to cmake's
     # pypi package not having manylinux1 wheel)
     - MB_ML_VER=2010
-    # Tell multibuild to target OSX 10.9 instead of 10.6
-    - MB_PYTHON_OSX_VER=10.9
+
+# You will likely prefer "language: generic" for travis configuration, rather
+# than, say "language: python". Multibuild doesn't use Travis-provided Python
+# but rather installs and uses its own, where the Python version is set from the
+# MB_PYTHON_VERSION variable. You can still specify a language here if you need
+# it for some unrelated logic and you can't use Multibuild-provided Python or
+# other software present on a builder.
+language: generic
+
+# For CPython macOS builds only, the minimum supported macOS version and
+# architectures of any C extensions in the wheel are set with the variable
+# MB_PYTHON_OSX_VER: 10.9 (64-bit only) or 10.6 (64/32-bit dual arch). By
+# default this is set to the highest available for the Python version selected
+# using MB_PYTHON_VERSION. You should only need to set this explicitly if you
+# are building a 10.6 dual-arch build for a CPython version where both a 10.9
+# and 10.6 build are available (for example, 2.7 or 3.7). All PyPy macOS builds
+# are 64-bit only.
+
+# Required in Linux to invoke `docker` ourselves
+services: docker
+
+# Host distribution. This is the distribution from which we run the build and
+# test containers, via docker.
+dist: xenial
 
 matrix:
   fast_finish: true
   include:
     - os: linux
-      language: python
-      python: 2.7
+      env: MB_PYTHON_VERSION=2.7
     - os: linux
-      language: python
-      python: 3.6
+      env: MB_PYTHON_VERSION=3.6
     - os: osx
-      python: 2.7
-      env:
-        - MB_PYTHON_VERSION=2.7
+      env: MB_PYTHON_VERSION=2.7
     - os: osx
-      python: 3.6
-      env:
-        - MB_PYTHON_VERSION=3.6
+      env: MB_PYTHON_VERSION=3.6
 
 before_install:
   # Test the C stuff before building a Python wheel

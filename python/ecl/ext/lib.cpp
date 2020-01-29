@@ -8,6 +8,14 @@
 
 #include <ert/util/ecl_version.hpp>
 
+#if defined(__APPLE__) && defined(__MACH__)
+# define LIBECL "libecl.2.dylib"
+#elif defined(__linux__)
+# define LIBECL "libecl.2.so"
+#else
+# error "Building Python extension is not supported on your system"
+#endif
+
 namespace py = pybind11;
 using namespace py::literals;
 
@@ -51,7 +59,7 @@ PYBIND11_MODULE(_ecl, m)
     py::register_exception<util_abort_error>(m, "UtilAbort");
 
     /* Load libecl.so with RTLD_NOLOAD. */
-    auto libecl_handle = dlopen("libecl.so.2", RTLD_NOW | RTLD_GLOBAL | RTLD_NOLOAD);
+    auto libecl_handle = dlopen(LIBECL, RTLD_NOW | RTLD_GLOBAL | RTLD_NOLOAD);
     if (!libecl_handle)
         throw util_abort_error("Could not dlopen libecl.so");
     m.add_object("libecl_handle", PyLong_FromVoidPtr(libecl_handle));

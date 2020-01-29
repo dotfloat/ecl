@@ -1,11 +1,4 @@
-language: python
-
-python:
-  - 2.7
-  - 3.6
-
-os:
-  - linux
+language: generic
 
 compiler:
   - gcc
@@ -32,31 +25,38 @@ env:
     - TEST_DEPENDS=pytest
     # amd64 fo' lyfe
     - PLAT=x86_64
+    # Tell multibuild to use manylinux2010 docker image (mostly due to cmake's
+    # pypi package not having manylinux1 wheel)
+    - MB_ML_VER=2010
+    # Tell multibuild to target OSX 10.9 instead of 10.6
+    - MB_PYTHON_OSX_VER=10.9
 
 matrix:
   fast_finish: true
   include:
     - os: linux
-      env:
-        # Tell multibuild to use manylinux2010 docker image (mostly due to
-        # cmake's pypi package not having manylinux1 wheel)
-        - MB_ML_VER=2010
+      language: python
+      python: 2.7
+    - os: linux
+      language: python
+      python: 3.6
     - os: osx
-      language: generic
       env:
         - MB_PYTHON_VER=2.7
-        - MB_PYTHON_OSX_VER=10.9
+    - os: osx
+      env:
+        - MB_PYTHON_VER=3.6
 
 before_install:
   # Test the C stuff before building a Python wheel
   # - pip install --upgrade pip scikit-build pybind11
   # - pip install -e .
-  - pip install -r requirements-dev.txt
-  - python setup.py build
-  - pushd $(python -c "import skbuild; print(skbuild.constants.CMAKE_BUILD_DIR())")
-  - ln -s lib64 bin/.lib64
-  - ctest --output-on-error
-  - popd
+  # - pip install -r requirements-dev.txt
+  # - python setup.py build -- -DBUILD_TESTS=ON
+  # - pushd $(python -c "import skbuild; print(skbuild.constants.CMAKE_BUILD_DIR())")
+  # - ln -s lib64 bin/.lib64
+  # - ctest --output-on-error
+  # - popd
 
   # Use multibuild to build a Python wheel
   - source multibuild/common_utils.sh

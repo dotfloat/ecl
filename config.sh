@@ -15,12 +15,10 @@ function run_tests {
     # This doesn't work because the _ecl.so module only exists in site-packages,
     # so we copy directories required by the tests out into its own temporary
     # directory.
-    mkdir -p /tmp/test-dir/{.git,python}
-    ln -s {$PWD,/tmp/test-dir}/bin
-    ln -s {$PWD,/tmp/test-dir}/lib
-    ln -s {$PWD,/tmp/test-dir}/test-data
-    cp -R {$PWD,/tmp/test-dir}/python/tests
-    pushd /tmp/test-dir
+    mkdir -p {.git,python}
+    ln -s {/io,$PWD}/bin
+    ln -s {/io,$PWD}/lib
+    ln -s {/io,$PWD}/test-data
+    cp -R {/io,$PWD}/python/tests
     python -m pytest python/tests
-    popd
 }

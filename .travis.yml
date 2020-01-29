@@ -50,10 +50,16 @@ before_install:
 install:
   - clean_code $REPO_DIR $TRAVIS_COMMIT
   - build_wheel $REPO_DIR $PLAT
+  - pip install pytest wheelhouse/*
 
 script:
-  # Who needs tests anyway?
-  - install_run $PLAT
+  # - install_run $PLAT
+  - mkdir -p /tmp/test-dir/{.git,python}
+  - ln -s {$PWD,/tmp/test-dir}/test-data
+  - cp -R {$PWD,/tmp/test-dir}/python/tests
+  - pushd /tmp/test-dir
+  - python -m pytest python/tests
+  - popd
 
 before_deploy:
   # Travis doesn't really support uploading wheelhouses. However, we can trick

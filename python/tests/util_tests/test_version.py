@@ -105,6 +105,5 @@ class VersionTest(EclTest):
 
 
     def test_root_path(self):
-        self.assertTrue( os.path.isdir( os.path.join( ecl.root() , "ecl")))
-        self.assertTrue( os.path.isfile( os.path.join( ecl.root() , "ecl", "__init__.py")))
-
+        self.assertTrue( os.path.isdir( os.path.join( os.path.dirname( ecl.__file__ ) , "ecl")))
+        self.assertTrue( os.path.isfile( os.path.join( os.path.dirname( ecl.__file__ ) , "ecl", "__init__.py")))

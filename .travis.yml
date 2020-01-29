@@ -55,6 +55,7 @@ install:
 script:
   # - install_run $PLAT
   - mkdir -p /tmp/test-dir/{.git,python}
+  - ln -s {$PWD,/tmp/test-dir}/lib
   - ln -s {$PWD,/tmp/test-dir}/test-data
   - cp -R {$PWD,/tmp/test-dir}/python/tests
   - pushd /tmp/test-dir

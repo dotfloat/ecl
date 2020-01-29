@@ -11,7 +11,7 @@
 #if defined(__APPLE__) && defined(__MACH__)
 # define LIBECL "libecl.2.dylib"
 #elif defined(__linux__)
-# define LIBECL "libecl.2.so"
+# define LIBECL "libecl.so.2"
 #else
 # error "Building Python extension is not supported on your system"
 #endif

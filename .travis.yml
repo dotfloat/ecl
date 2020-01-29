@@ -42,10 +42,10 @@ matrix:
       python: 3.6
     - os: osx
       env:
-        - MB_PYTHON_VER=2.7
+        - MB_PYTHON_VERSION=2.7
     - os: osx
       env:
-        - MB_PYTHON_VER=3.6
+        - MB_PYTHON_VERSION=3.6
 
 before_install:
   # Test the C stuff before building a Python wheel

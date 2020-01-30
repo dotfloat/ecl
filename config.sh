@@ -16,9 +16,9 @@ function run_tests {
     # so we copy directories required by the tests out into its own temporary
     # directory.
     mkdir -p {.git,python}
-    ln -s {/io,$PWD}/bin
-    ln -s {/io,$PWD}/lib
-    ln -s {/io,$PWD}/test-data
-    cp -R {/io,$PWD}/python/tests
+    ln -s {..,$PWD}/bin
+    ln -s {..,$PWD}/lib
+    ln -s {..,$PWD}/test-data
+    cp -R {..,$PWD}/python/tests
     python -m pytest python/tests
 }

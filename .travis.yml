@@ -47,8 +47,10 @@ matrix:
     - os: linux
       env: MB_PYTHON_VERSION=3.6
     - os: osx
+      python: 2.7
       env: MB_PYTHON_VERSION=2.7
     - os: osx
+      python: 3.6
       env: MB_PYTHON_VERSION=3.6
 
 before_install:

@@ -65,8 +65,6 @@ before_install:
   # - ln -s lib64 bin/.lib64
   # - ctest --output-on-error
   # - popd
-  
-  - MB
 
   # Use multibuild to build a Python wheel
   - source multibuild/common_utils.sh

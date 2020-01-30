@@ -32,6 +32,8 @@ warnings.simplefilter("always", DeprecationWarning)  # see #1437
 
 from cwrap import Prototype
 
+from .version import version as __version__
+
 _lib_path = os.path.join(os.path.dirname(__file__), ".libs")
 if platform.system() == "Linux":
     _lib_path = os.path.join(_lib_path, "libecl.so")

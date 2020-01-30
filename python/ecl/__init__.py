@@ -32,11 +32,11 @@ warnings.simplefilter("always", DeprecationWarning)  # see #1437
 
 from cwrap import Prototype
 
-
+_lib_path = os.path.join(os.path.dirname(__file__), ".libs")
 if platform.system() == "Linux":
-    _lib_path = path.join(path.dirname(__file__), ".libs", "libecl.so")
+    _lib_path = os.path.join(_lib_path, "libecl.so")
 elif platform.system() == "Darwin":
-    _lib_path = path.join(path.dirname(__file__), ".libs", "libecl.dylib")
+    _lib_path = os.path.join(_lib_path, "libecl.dylib")
 else:
     raise NotImplementedError("Invalid platform")
 

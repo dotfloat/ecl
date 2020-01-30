@@ -6,7 +6,7 @@ env:
     # pip dependencies to _build_ your project. We need pybind11 because
     # otherwise the docker image can't find the includes even though it installs
     # fine via pip
-    # - BUILD_DEPENDS=pybind11
+    - BUILD_DEPENDS=pybind11
     # pip dependencies to _test_ your project
     - TEST_DEPENDS=pytest
     # amd64 fo' lyfe
@@ -43,15 +43,13 @@ matrix:
   fast_finish: true
   include:
     - os: linux
-      env: MB_PYTHON_VERSION=2.7
+      python: 2.7
     - os: linux
-      env: MB_PYTHON_VERSION=3.6
+      python: 3.6
     - os: osx
       python: 2.7
-      env: MB_PYTHON_VERSION=2.7
     - os: osx
       python: 3.6
-      env: MB_PYTHON_VERSION=3.6
 
 before_install:
   # Test the C stuff before building a Python wheel

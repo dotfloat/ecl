@@ -24,6 +24,7 @@ ecl.ecl: Package for working with ECLIPSE files. The far most mature
 import os.path
 import sys
 import ctypes
+import platform
 
 import warnings
 
@@ -31,11 +32,17 @@ warnings.simplefilter("always", DeprecationWarning)  # see #1437
 
 from cwrap import Prototype
 
-from ._ecl import libecl_handle, __version__
+
+if platorm.system() == "Linux":
+    _lib_path = path.join(path.dirname(__file__), ".libs", "libecl.so")
+elif platform.system() == "Darwin":
+    _lib_path = path.join(path.dirname(__file__), ".libs", "libecl.dylib")
+else:
+    raise NotImplementedError("Invalid platform")
 
 
 class EclPrototype(Prototype):
-    lib = ctypes.PyDLL(None, ctypes.RTLD_GLOBAL, handle=libecl_handle)
+    lib = ctypes.CDLL(_lib_path, ctypes.RTLD_GLOBAL)
 
     def __init__(self, prototype, bind=True):
         super(EclPrototype, self).__init__(EclPrototype.lib, prototype, bind=bind)

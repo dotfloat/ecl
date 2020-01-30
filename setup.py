@@ -64,9 +64,6 @@ skbuild.setup(
     # instead, the get include dirs from the package and give directly from
     # here
     cmake_args=[
-        "-DCMAKE_SKIP_BUILD_RPATH:BOOL=FALSE",
-        "-DCMAKE_BUILD_WITH_INSTALL_RPATH:BOOL=TRUE",
-        "-DCMAKE_INSTALL_RPATH=$ORIGIN/.libs",
         "-DECL_VERSION=" + version,
         "-DPYBIND11_INCLUDE_DIRS=" + ";".join(pybind_includes),
         # we can safely pass OSX_DEPLOYMENT_TARGET as it's ignored on

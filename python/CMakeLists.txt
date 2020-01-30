@@ -6,7 +6,7 @@ if (SKBUILD)
   # extension cmake. this works around the fundamental limitation in cmake
   # that it looks only for directories with a CMakeLists.txt in it, not for a
   # named file
-  include(setup-CMakeLists.txt)
+  # include(setup-CMakeLists.txt)
   return ()
 endif ()
 

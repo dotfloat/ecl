@@ -33,7 +33,7 @@ warnings.simplefilter("always", DeprecationWarning)  # see #1437
 from cwrap import Prototype
 
 
-if platorm.system() == "Linux":
+if platform.system() == "Linux":
     _lib_path = path.join(path.dirname(__file__), ".libs", "libecl.so")
 elif platform.system() == "Darwin":
     _lib_path = path.join(path.dirname(__file__), ".libs", "libecl.dylib")

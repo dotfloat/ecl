@@ -72,7 +72,7 @@ before_install:
   - before_install
 
 install:
-  - clean_code $REPO_DIR $TRAVIS_COMMIT
+  # - clean_code $REPO_DIR $TRAVIS_COMMIT
   - build_wheel $REPO_DIR $PLAT
   # - pip install pytest wheelhouse/*
 

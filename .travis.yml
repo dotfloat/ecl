@@ -44,12 +44,16 @@ matrix:
   include:
     - os: linux
       python: 2.7
+      env: MB_PYTHON_VERSION=2.7
     - os: linux
       python: 3.6
+      env: MB_PYTHON_VERSION=3.6
     - os: osx
       python: 2.7
+      env: MB_PYTHON_VERSION=2.7
     - os: osx
       python: 3.6
+      env: MB_PYTHON_VERSION=3.6
 
 before_install:
   # Test the C stuff before building a Python wheel
@@ -61,6 +65,8 @@ before_install:
   # - ln -s lib64 bin/.lib64
   # - ctest --output-on-error
   # - popd
+  
+  - MB
 
   # Use multibuild to build a Python wheel
   - source multibuild/common_utils.sh

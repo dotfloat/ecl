@@ -7,8 +7,11 @@
 *.user
 *.user.*
 .idea
-python/lib64
-python/ecl/.lib64
+/python/lib64
+/python/ecl/.lib64
+/python/ecl/.libs
+/python/ecl/version.py
+/python/ecl/.include
 /libenkf/src/.faultlist
 /develbranch/libenkf/src/.faultlist
 /build
@@ -26,3 +29,6 @@ scratch.sparsebundle
 *.DS_Store
 __ecl_lib_path.py
 __ecl_lib_info.py
+/.eggs/
+*.egg-info/
+/venv/

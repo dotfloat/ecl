@@ -34,6 +34,11 @@ from cwrap import Prototype
 
 from .version import version as __version__
 
+
+def get_include():
+    return os.path.join(os.path.dirname(__file__), '.include')
+
+
 _lib_path = os.path.join(os.path.dirname(__file__), ".libs")
 if platform.system() == "Linux":
     _lib_path = os.path.join(_lib_path, "libecl.so")

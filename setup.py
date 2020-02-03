@@ -70,6 +70,8 @@ skbuild.setup(
         # everything not OS X. We depend on C++11, which makes our minimum
         # supported OS X release 10.9
         "-DCMAKE_OSX_DEPLOYMENT_TARGET=10.9",
+        "-DCMAKE_INSTALL_LIBDIR=python/ecl/.libs",
+        "-DCMAKE_INSTALL_INCLUDEDIR=python/ecl/.include"
     ],
     # skbuild's test imples develop, which is pretty obnoxious instead, use a
     # manually integrated pytest.

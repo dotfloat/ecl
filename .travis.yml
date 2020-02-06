@@ -56,14 +56,11 @@ matrix:
 
 before_install:
   # Test the C stuff before building a Python wheel
-  # - pip install --upgrade pip scikit-build pybind11
-  # - pip install -e .
-  # - pip install -r requirements-dev.txt
-  # - python setup.py build -- -DBUILD_TESTS=ON
-  # - pushd $(python -c "import skbuild; print(skbuild.constants.CMAKE_BUILD_DIR())")
-  # - ln -s lib64 bin/.lib64
-  # - ctest --output-on-error
-  # - popd
+  - mkdir build && pushd build
+  - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=ON
+  - cmake --build .
+  - ctest --output-on-failure
+  - popd && rm -rf build
 
   # Use multibuild to build a Python wheel
   - source multibuild/common_utils.sh

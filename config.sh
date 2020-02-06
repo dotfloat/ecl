@@ -10,6 +10,12 @@ function pre_build {
 function run_tests {
     # Runs tests on installed distribution from an empty directory
 
+    # ctest
+    cmake .. -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Release
+    cmake --build .
+    ctest --output-on-failure
+    rm -rf *
+
     # pytest adds every directory up-to and including python/ into sys.path,
     # meaning that "import ecl" will import python/ecl and not the installed one.
     # This doesn't work because the _ecl.so module only exists in site-packages,

@@ -4,17 +4,17 @@
 function pre_build {
     # Any stuff that you need to do before you start building the wheels
     # Runs in the root directory of this repository.
-    :
+
+    # Run ctest before creating the build
+    mkdir build && pushd build
+    cmake .. -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Release
+    cmake --build .
+    ctest --output-on-failure
+    popd && rm -rf build
 }
 
 function run_tests {
     # Runs tests on installed distribution from an empty directory
-
-    # ctest
-    cmake .. -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Release
-    cmake --build .
-    ctest --output-on-failure
-    rm -rf *
 
     # pytest adds every directory up-to and including python/ into sys.path,
     # meaning that "import ecl" will import python/ecl and not the installed one.

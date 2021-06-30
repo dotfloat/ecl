@@ -13,8 +13,8 @@ public:
   unsmry_loader(const ecl_smspec_type * smspec, const std::string& filename, int file_options);
   ~unsmry_loader();
 
-  std::vector<double> get_vector(int pos) const;
-  std::vector<double> sim_seconds() const;
+  std::vector<float> get_vector(int pos) const;
+  std::vector<float> sim_seconds() const;
   std::vector<time_t> sim_time() const;
   int length() const;
 

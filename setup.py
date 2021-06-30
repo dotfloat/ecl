@@ -70,7 +70,7 @@ skbuild.setup(
     },
     cmake_args=[
         "-DECL_VERSION=" + version,
-        "-DBUILD_APPLICATIONS=" + ("ON" if sys.platform == "linux" else "OFF"),
+        "-DBUILD_APPLICATIONS=OFF",# + ("ON" if sys.platform == "linux" else "OFF"),
         "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
         "-DCMAKE_INSTALL_BINDIR=python/ecl/.bin",
         "-DCMAKE_INSTALL_LIBDIR=python/ecl/.libs",

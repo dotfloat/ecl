@@ -99,7 +99,7 @@ public:
 
   int                  length_before(time_t end_time) const;
   void                 get_time(int length, time_t *data);
-  void                 get_data(int params_index, int length, double *data);
+  void                 get_data(int params_index, int length, float *data);
   int                  length() const;
   time_t               get_data_start() const;
   time_t               get_sim_end() const;
@@ -115,7 +115,7 @@ public:
   bool                 report_step_equal( const ecl_sum_file_data& other, bool strict) const;
   int                  report_before(time_t end_time) const;
   int                  get_time_report(int max_internal_index, time_t *data);
-  int                  get_data_report(int params_index, int max_internal_index, double *data, double default_value);
+  int                  get_data_report(int params_index, int max_internal_index, float *data, float default_value);
   int                  first_report() const;
   int                  last_report() const;
   int                  iget_report(int time_index) const;

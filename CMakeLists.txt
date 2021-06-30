@@ -145,7 +145,7 @@ endif()
 # Treat warnings as errors if not on Windows
 if (NOT ERT_WINDOWS)
    set( CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -std=gnu99 -Wall -Wno-unknown-pragmas ")
-   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wfatal-errors -Wall -Wno-unknown-pragmas -Wno-unused-result -Wno-unused-parameter" )
+   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wfatal-errors -Wall -Wextra -Wno-unknown-pragmas -Wno-unused-result -Wno-unused-parameter" )
 endif()
 
 if (MSVC)

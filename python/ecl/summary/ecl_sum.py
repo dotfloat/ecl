@@ -146,8 +146,8 @@ class EclSum(BaseCClass):
     _is_total                      = EclPrototype("bool smspec_node_identify_total(char*, ecl_sum_var_type)", bind = False)
     _get_last_value                = EclPrototype("double ecl_sum_get_last_value_gen_key(ecl_sum, char*)")
     _get_first_value               = EclPrototype("double ecl_sum_get_first_value_gen_key(ecl_sum, char*)")
-    _init_numpy_vector             = EclPrototype("void ecl_sum_init_double_vector(ecl_sum, char*, double*)")
-    _init_numpy_vector_interp      = EclPrototype("void ecl_sum_init_double_vector_interp(ecl_sum, char*, time_t_vector, double*)")
+    _init_numpy_vector             = EclPrototype("void ecl_sum_init_double_vector(ecl_sum, char*, float*)")
+    _init_numpy_vector_interp      = EclPrototype("void ecl_sum_init_double_vector_interp(ecl_sum, char*, time_t_vector, float*)")
     _init_numpy_datetime64         = EclPrototype("void ecl_sum_init_datetime64_vector(ecl_sum, int64*, int)")
 
 
@@ -428,13 +428,13 @@ class EclSum(BaseCClass):
                 raise ValueError("Can not suuply both time_index and report_only=True")
 
         if time_index is None:
-            np_vector = numpy.zeros(len(self))
-            self._init_numpy_vector(key ,np_vector.ctypes.data_as(ctypes.POINTER(ctypes.c_double)))
+            np_vector = numpy.zeros(len(self), dtype=numpy.float32)
+            self._init_numpy_vector(key ,np_vector.ctypes.data_as(ctypes.POINTER(ctypes.c_float)))
             return np_vector
         else:
            time_vector = self._make_time_vector(time_index)
-           np_vector = numpy.zeros(len(time_vector))
-           self._init_numpy_vector_interp(key, time_vector, np_vector.ctypes.data_as(ctypes.POINTER(ctypes.c_double)))
+           np_vector = numpy.zeros(len(time_vector), dtype=numpy.float32)
+           self._init_numpy_vector_interp(key, time_vector, np_vector.ctypes.data_as(ctypes.POINTER(ctypes.c_float)))
            return np_vector
 
 
@@ -514,12 +514,12 @@ class EclSum(BaseCClass):
 
         if time_index is None:
             time_index = self.numpy_dates
-            data = numpy.zeros([len(time_index), len(keywords)])
-            EclSum._init_pandas_frame(self, keywords,data.ctypes.data_as(ctypes.POINTER(ctypes.c_double)))
+            data = numpy.zeros([len(time_index), len(keywords)], dtype=numpy.float32)
+            EclSum._init_pandas_frame(self, keywords,data.ctypes.data_as(ctypes.POINTER(ctypes.c_float)))
         else:
             time_points = self._make_time_vector(time_index)
-            data = numpy.zeros([len(time_points), len(keywords)])
-            EclSum._init_pandas_frame_interp(self, keywords, time_points, data.ctypes.data_as(ctypes.POINTER(ctypes.c_double)))
+            data = numpy.zeros([len(time_points), len(keywords)], dtype=numpy.float32)
+            EclSum._init_pandas_frame_interp(self, keywords, time_points, data.ctypes.data_as(ctypes.POINTER(ctypes.c_float)))
 
         frame = pandas.DataFrame(index = time_index, columns=list(keywords), data=data)
         return frame
@@ -1547,8 +1547,8 @@ are advised to fetch vector as a numpy vector and then scale that yourself:
 import ecl.summary.ecl_sum_keyword_vector
 EclSum._dump_csv_line = EclPrototype("void ecl_sum_fwrite_interp_csv_line(ecl_sum, time_t, ecl_sum_vector, FILE)", bind=False)
 EclSum._get_interp_vector = EclPrototype("void ecl_sum_get_interp_vector(ecl_sum, time_t, ecl_sum_vector, double_vector)", bind=False)
-EclSum._init_pandas_frame = EclPrototype("void ecl_sum_init_double_frame(ecl_sum, ecl_sum_vector, double*)", bind=False)
-EclSum._init_pandas_frame_interp = EclPrototype("void ecl_sum_init_double_frame_interp(ecl_sum, ecl_sum_vector, time_t_vector, double*)", bind=False)
+EclSum._init_pandas_frame = EclPrototype("void ecl_sum_init_double_frame(ecl_sum, ecl_sum_vector, float*)", bind=False)
+EclSum._init_pandas_frame_interp = EclPrototype("void ecl_sum_init_double_frame_interp(ecl_sum, ecl_sum_vector, time_t_vector, float*)", bind=False)
 
 monkey_the_camel(EclSum, 'varType', EclSum.var_type, classmethod)
 monkey_the_camel(EclSum, 'addVariable', EclSum.add_variable)

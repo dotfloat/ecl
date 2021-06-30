@@ -52,7 +52,7 @@ typedef struct ecl_sum_data_struct ecl_sum_data_type ;
   bool                     ecl_sum_data_check_sim_time( const ecl_sum_data_type * data , time_t sim_time);
   bool                     ecl_sum_data_check_sim_days( const ecl_sum_data_type * data , double sim_days);
   int                      ecl_sum_data_get_num_ministep( const ecl_sum_data_type * data );
-  double_vector_type     * ecl_sum_data_alloc_data_vector( const ecl_sum_data_type * data , int data_index , bool report_only);
+  float_vector_type     * ecl_sum_data_alloc_data_vector( const ecl_sum_data_type * data , int data_index , bool report_only);
   void                     ecl_sum_data_init_time_vector( const ecl_sum_data_type * data , time_t_vector_type * time_vector , bool report_only);
   time_t_vector_type     * ecl_sum_data_alloc_time_vector( const ecl_sum_data_type * data , bool report_only);
   time_t                   ecl_sum_data_get_data_start( const ecl_sum_data_type * data );
@@ -88,20 +88,20 @@ typedef struct ecl_sum_data_struct ecl_sum_data_type ;
   double                   ecl_sum_data_get_last_value(const ecl_sum_data_type * data, int param_index);
   double                   ecl_sum_data_iget_last_value(const ecl_sum_data_type * data, int param_index);
   double                   ecl_sum_data_iget_first_value(const ecl_sum_data_type * data, int param_index);
-  void                     ecl_sum_data_init_double_vector(const ecl_sum_data_type * data, int params_index, double * output_data);
+  void                     ecl_sum_data_init_double_vector(const ecl_sum_data_type * data, int params_index, float * output_data);
   void                     ecl_sum_data_init_datetime64_vector(const ecl_sum_data_type * data, int64_t * output_data, int multiplier);
 
-  void                     ecl_sum_data_init_double_frame(const ecl_sum_data_type * data, const ecl_sum_vector_type * keywords, double *output_data);
+  void                     ecl_sum_data_init_double_frame(const ecl_sum_data_type * data, const ecl_sum_vector_type * keywords, float *output_data);
   double_vector_type     * ecl_sum_data_alloc_seconds_solution( const ecl_sum_data_type * data , const ecl::smspec_node& node , double value, bool rates_clamp_lower);
   void                     ecl_sum_data_init_double_frame_interp(const ecl_sum_data_type * data,
                                                                  const ecl_sum_vector_type * keywords,
                                                                  const time_t_vector_type * time_points,
-                                                                 double * output_data);
+                                                                 float * output_data);
 
   void ecl_sum_data_init_double_vector_interp(const ecl_sum_data_type * data,
                                               const ecl::smspec_node& smspec_node,
                                               const time_t_vector_type * time_points,
-                                              double * output_data);
+                                              float * output_data);
 
 
 #ifdef __cplusplus

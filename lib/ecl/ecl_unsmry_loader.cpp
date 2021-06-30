@@ -51,18 +51,15 @@ int unsmry_loader::length() const {
 }
 
 
-std::vector<double> unsmry_loader::get_vector(int pos) const {
+std::vector<float> unsmry_loader::get_vector(int pos) const {
   if (pos >= size)
     throw std::out_of_range("unsmry_loader::get_vector pos: " + std::to_string(pos) + " PARAMS_SIZE: " + std::to_string(size));
 
-  std::vector<double> data(this->length());
+  std::vector<float> data(this->length());
   int_vector_type * index_map = int_vector_alloc( 1 , pos);
-  char buffer[4];
 
   for (int index = 0; index < this->length(); index++) {
-    ecl_file_view_index_fload_kw(file_view, PARAMS_KW, index, index_map, buffer);
-    float * data_value = (float*) buffer;
-    data[index] = *data_value;
+    ecl_file_view_index_fload_kw(file_view, PARAMS_KW, index, index_map, reinterpret_cast<char*>(&data[index]));
   }
   int_vector_free( index_map );
 
@@ -132,7 +129,7 @@ std::vector<int> unsmry_loader::report_steps(int offset) const {
 
 std::vector<time_t> unsmry_loader::sim_time() const {
   if (this->time_index >= 0) {
-    const std::vector<double> sim_seconds = this->sim_seconds();
+    const std::vector<float> sim_seconds = this->sim_seconds();
     std::vector<time_t> st(this->length(), this->sim_start);
 
     for (size_t i=0; i < st.size(); i++)
@@ -156,16 +153,16 @@ std::vector<time_t> unsmry_loader::sim_time() const {
 }
 
 
-std::vector<double> unsmry_loader::sim_seconds() const {
+std::vector<float> unsmry_loader::sim_seconds() const {
   if (this->time_index >= 0) {
-    std::vector<double> seconds = this->get_vector(this->time_index);
+    auto seconds = this->get_vector(this->time_index);
     for (size_t i=0; i < seconds.size(); i++)
       seconds[i] *= this->time_seconds;
 
     return seconds;
   } else {
     std::vector<time_t> st = this->sim_time();
-    std::vector<double> seconds(st.size());
+    std::vector<float> seconds(st.size());
 
     for (size_t i=0; i < st.size(); i++)
       seconds[i] = util_difftime_seconds(this->sim_start, st[i]);

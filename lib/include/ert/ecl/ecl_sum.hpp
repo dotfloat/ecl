@@ -158,7 +158,7 @@ typedef struct ecl_sum_struct       ecl_sum_type;
   double ecl_sum_iget_general_var(const ecl_sum_type * ecl_sum , int internal_index , const char * lookup_kw);
 
 
-  double_vector_type * ecl_sum_alloc_data_vector( const ecl_sum_type * ecl_sum  , int data_index , bool report_only);
+  float_vector_type * ecl_sum_alloc_data_vector( const ecl_sum_type * ecl_sum  , int data_index , bool report_only);
   time_t_vector_type * ecl_sum_alloc_time_vector( const ecl_sum_type * ecl_sum  , bool report_only);
   time_t       ecl_sum_get_data_start( const ecl_sum_type * ecl_sum );
   time_t       ecl_sum_get_end_time( const ecl_sum_type * ecl_sum);
@@ -262,10 +262,10 @@ typedef struct ecl_sum_struct       ecl_sum_type;
   double               ecl_sum_get_first_value_node(const ecl_sum_type * ecl_sum, const ecl::smspec_node *node);
 
   void                 ecl_sum_init_datetime64_vector(const ecl_sum_type * ecl_sum, int64_t * data, int multiplier);
-  void                 ecl_sum_init_double_vector_interp(const ecl_sum_type * ecl_sum, const char * gen_key, const time_t_vector_type * time_points, double * data);
-  void                 ecl_sum_init_double_vector(const ecl_sum_type * ecl_sum, const char * gen_key, double * data);
-  void                 ecl_sum_init_double_frame(const ecl_sum_type * ecl_sum, const ecl_sum_vector_type * keywords, double * data);
-  void                 ecl_sum_init_double_frame_interp(const ecl_sum_type * ecl_sum, const ecl_sum_vector_type * keywords, const time_t_vector_type * time_points, double * data);
+  void                 ecl_sum_init_double_vector_interp(const ecl_sum_type * ecl_sum, const char * gen_key, const time_t_vector_type * time_points, float * data);
+  void                 ecl_sum_init_double_vector(const ecl_sum_type * ecl_sum, const char * gen_key, float * data);
+  void                 ecl_sum_init_double_frame(const ecl_sum_type * ecl_sum, const ecl_sum_vector_type * keywords, float * data);
+  void                 ecl_sum_init_double_frame_interp(const ecl_sum_type * ecl_sum, const ecl_sum_vector_type * keywords, const time_t_vector_type * time_points, float * data);
   UTIL_IS_INSTANCE_HEADER( ecl_sum );
 
 #ifdef __cplusplus

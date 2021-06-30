@@ -1080,7 +1080,7 @@ time_t_vector_type *  ecl_sum_data_alloc_time_vector( const ecl_sum_data_type * 
 
 
 
-static void ecl_sum_data_init_double_vector__(const ecl_sum_data_type * data, int main_params_index, double * output_data, bool report_only) {
+static void ecl_sum_data_init_double_vector__(const ecl_sum_data_type * data, int main_params_index, float * output_data, bool report_only) {
   int offset = 0;
   for (const auto& index_node : data->index) {
     const auto& data_file = data->data_files[index_node.data_index];
@@ -1089,7 +1089,7 @@ static void ecl_sum_data_init_double_vector__(const ecl_sum_data_type * data, in
 
     if (report_only) {
       const ecl::smspec_node& smspec_node = ecl_smspec_iget_node_w_params_index(data->smspec, main_params_index);
-      double default_value = smspec_node.get_default();
+      float default_value = smspec_node.get_default();
       offset += data_file->get_data_report(params_index, index_node.length, &output_data[offset], default_value);
     } else {
 
@@ -1113,13 +1113,13 @@ void ecl_sum_data_init_datetime64_vector(const ecl_sum_data_type * data, int64_t
 
 
 
-void ecl_sum_data_init_double_vector(const ecl_sum_data_type * data, int params_index, double * output_data) {
+void ecl_sum_data_init_double_vector(const ecl_sum_data_type * data, int params_index, float * output_data) {
   ecl_sum_data_init_double_vector__(data, params_index, output_data, false);
 }
 
 
-double_vector_type * ecl_sum_data_alloc_data_vector( const ecl_sum_data_type * data , int params_index , bool report_only) {
-  std::vector<double> output_data;
+float_vector_type * ecl_sum_data_alloc_data_vector( const ecl_sum_data_type * data , int params_index , bool report_only) {
+  std::vector<float> output_data;
   if (report_only)
     output_data.resize( 1 + ecl_sum_data_get_last_report_step(data) - ecl_sum_data_get_first_report_step(data));
   else
@@ -1129,9 +1129,9 @@ double_vector_type * ecl_sum_data_alloc_data_vector( const ecl_sum_data_type * d
     throw std::out_of_range("Out of range");
 
   ecl_sum_data_init_double_vector__(data, params_index, output_data.data(), report_only);
-  double_vector_type * data_vector = double_vector_alloc(output_data.size(), 0);
+  float_vector_type * data_vector = float_vector_alloc(output_data.size(), 0);
   {
-    double * tmp_data = double_vector_get_ptr( data_vector );
+    float * tmp_data = float_vector_get_ptr( data_vector );
     memcpy(tmp_data, output_data.data(), output_data.size() * sizeof(double));
   }
   return data_vector;
@@ -1141,13 +1141,13 @@ double_vector_type * ecl_sum_data_alloc_data_vector( const ecl_sum_data_type * d
 void ecl_sum_data_init_double_vector_interp(const ecl_sum_data_type * data,
                                             const ecl::smspec_node& smspec_node,
                                             const time_t_vector_type * time_points,
-                                            double * output_data) {
+                                            float * output_data) {
   bool is_rate = smspec_node_is_rate(&smspec_node);
   int params_index = smspec_node_get_params_index(&smspec_node);
   time_t start_time = ecl_sum_data_get_data_start(data);
   time_t end_time   = ecl_sum_data_get_sim_end(data);
-  double start_value = 0;
-  double end_value = 0;
+  float start_value = 0;
+  float end_value = 0;
 
   if (!is_rate) {
     start_value = ecl_sum_data_iget_first_value(data, params_index);
@@ -1156,7 +1156,7 @@ void ecl_sum_data_init_double_vector_interp(const ecl_sum_data_type * data,
 
   for (int time_index=0; time_index < time_t_vector_size(time_points); time_index++) {
     time_t sim_time = time_t_vector_iget( time_points, time_index);
-    double value;
+    float value;
     if (sim_time < start_time)
       value = start_value;
 
@@ -1184,7 +1184,7 @@ void ecl_sum_data_init_double_vector_interp(const ecl_sum_data_type * data,
 
 
 
-void ecl_sum_data_init_double_frame(const ecl_sum_data_type * data, const ecl_sum_vector_type * keywords, double *output_data) {
+void ecl_sum_data_init_double_frame(const ecl_sum_data_type * data, const ecl_sum_vector_type * keywords, float *output_data) {
   int time_stride = ecl_sum_vector_get_size(keywords);
   int key_stride = 1;
   for (int time_index=0; time_index < ecl_sum_data_get_length(data); time_index++) {
@@ -1201,7 +1201,7 @@ void ecl_sum_data_init_double_frame(const ecl_sum_data_type * data, const ecl_su
 void ecl_sum_data_init_double_frame_interp(const ecl_sum_data_type * data,
                                            const ecl_sum_vector_type * keywords,
                                            const time_t_vector_type * time_points,
-                                           double * output_data) {
+                                           float * output_data) {
   int num_keywords = ecl_sum_vector_get_size(keywords);
   int time_stride = num_keywords;
   int key_stride = 1;

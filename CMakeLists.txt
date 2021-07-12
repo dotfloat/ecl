@@ -1,18 +1,11 @@
-cmake_minimum_required(
-  VERSION 2.8.12) # If you are creating Python wrappers for Windows, the actual
-                  # version requirement is 3.4
+cmake_minimum_required(VERSION 3.12)
 project(ecl C CXX)
 
 include(GNUInstallDirs)
 include(TestBigEndian)
 
-if(NOT DEFINED CMAKE_MACOSX_RPATH)
-  # There is some weirdness around this variable, the default value is different
-  # depending on the cmake version, see policy CMP0042. A more explicit way to
-  # treat this would be `cmake_policy(SET CMP0042 NEW)` but that would fail on
-  # CMake 2.8.12 (the variable exists but the policy doesn't)
-  set(CMAKE_MACOSX_RPATH ON)
-endif()
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 # -----------------------------------------------------------------
 
@@ -174,7 +167,6 @@ if(MSVC)
 endif()
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
-find_package(CXX11Features)
 
 # -----------------------------------------------------------------
 
@@ -387,6 +379,7 @@ endif()
 add_subdirectory(lib)
 add_subdirectory(applications)
 add_subdirectory(bin)
+add_subdirectory(python)
 
 if(ENABLE_PYTHON)
   message(
@@ -400,12 +393,6 @@ if(ENABLE_PYTHON AND ERT_WINDOWS)
     message(
       FATAL_ERROR "The Python wrappers require Visual Studio 2015 or newer")
   endif()
-endif()
-
-if(ENABLE_PYTHON)
-  # If finding the Python interpreter and required packages fails in the
-  # python/CMakeLists.txt file the ENABLE_PYTHON will be set to OFF.
-  add_subdirectory(python)
 endif()
 
 if(ENABLE_PYTHON)

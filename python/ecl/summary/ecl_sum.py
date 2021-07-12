@@ -21,6 +21,7 @@ in the C source files ecl_sum.c, ecl_smspec.c and ecl_sum_data in the
 libecl/src directory.
 """
 
+from typing import List, Optional
 import warnings
 import numpy
 import datetime
@@ -91,6 +92,7 @@ def date2num(dt):
 
 class EclSum(BaseCClass):
     TYPE_NAME = "ecl_sum"
+
     _fread_alloc_case2 = EclPrototype(
         "void*     ecl_sum_fread_alloc_case2__(char*, char*, bool, bool, int)",
         bind=False,
@@ -474,6 +476,10 @@ class EclSum(BaseCClass):
             time_points.append(t)
         return time_points
 
+    def to_numpy(self, key: str, time_index: Optional[List[datetime.datetime]]=None, report_only: bool = False) -> numpy.ndarray:
+        from ecl._native.summary import ecl_sum_to_numpy
+        return ecl_sum_to_numpy(self, key=key, time_index=time_index, report_only=report_only)
+
     def numpy_vector(self, key, time_index=None, report_only=False):
         """Will return numpy vector of all the values corresponding to @key.
 
@@ -506,21 +512,18 @@ class EclSum(BaseCClass):
             else:
                 raise ValueError("Can not suuply both time_index and report_only=True")
 
-        if time_index is None:
-            np_vector = numpy.zeros(len(self))
-            self._init_numpy_vector(
-                key, np_vector.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
-            )
-            return np_vector
-        else:
-            time_vector = self._make_time_vector(time_index)
-            np_vector = numpy.zeros(len(time_vector))
-            self._init_numpy_vector_interp(
-                key,
-                time_vector,
-                np_vector.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
-            )
-            return np_vector
+        return self.to_numpy(key, time_index, report_only)
+        # if time_index is None:
+        #     return self.to_numpy(key, time_index, report_only)
+        # else:
+        #     time_vector = self._make_time_vector(time_index)
+        #     np_vector = numpy.zeros(len(time_vector))
+        #     self._init_numpy_vector_interp(
+        #         key,
+        #         time_vector,
+        #         np_vector.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
+        #     )
+        #     return np_vector
 
     @property
     def numpy_dates(self):

@@ -59,6 +59,7 @@ configure_file(ert_api_config.hpp.in include/ert/util/ert_api_config.hpp)
 
 add_library(
   ecl
+  STATIC
   util/rng.cpp
   util/lookup_table.cpp
   util/statistics.cpp

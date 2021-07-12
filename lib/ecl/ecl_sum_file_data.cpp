@@ -7,6 +7,7 @@
 #include <ert/ecl/ecl_kw.h>
 #include <ert/ecl/ecl_kw_magic.h>
 #include <ert/ecl/ecl_endian_flip.h>
+#include <ert/util/vector.hpp>
 
 #include "detail/ecl/ecl_sum_file_data.hpp"
 #include "detail/ecl/ecl_unsmry_loader.hpp"
@@ -395,7 +396,7 @@ int ecl_sum_file_data::get_time_report(int end_index, time_t *data) {
     return offset;
 }
 
-void ecl_sum_file_data::get_data(int params_index, int length, double *data) {
+void ecl_sum_file_data::get_data(int params_index, int length, float *data) {
     if (this->loader) {
         const auto tmp_data = loader->get_vector(params_index);
         memcpy(data, tmp_data.data(), length * sizeof data);
@@ -406,7 +407,7 @@ void ecl_sum_file_data::get_data(int params_index, int length, double *data) {
 }
 
 int ecl_sum_file_data::get_data_report(int params_index, int end_index,
-                                       double *data, double default_value) {
+                                       float *data, float default_value) {
     int offset = 0;
 
     for (int report_step = this->first_report();

@@ -98,7 +98,8 @@ class EclSum(BaseCClass):
         bind=False,
     )
     _fread_alloc = EclPrototype(
-        "void*     ecl_sum_fread_alloc(char*, stringlist, char*, bool)", bind=False
+        "void*     ecl_sum_fread_alloc(char*, stringlist, char*, bool, bool, int)",
+        bind=False,
     )
     _create_restart_writer = EclPrototype(
         "ecl_sum_obj  ecl_sum_alloc_restart_writer2(char*, char*, int, bool, bool, char*, time_t, bool, int, int, int)",
@@ -278,7 +279,7 @@ class EclSum(BaseCClass):
         data_files = StringList()
         data_files.append(unsmry_file)
         c_ptr = cls._fread_alloc(
-            smspec_file, data_files, key_join_string, include_restart
+            smspec_file, data_files, key_join_string, include_restart, False, 0
         )
         if c_ptr is None:
             raise IOError("Failed to create summary instance")
@@ -476,9 +477,17 @@ class EclSum(BaseCClass):
             time_points.append(t)
         return time_points
 
-    def to_numpy(self, key: str, time_index: Optional[List[datetime.datetime]]=None, report_only: bool = False) -> numpy.ndarray:
+    def to_numpy(
+        self,
+        key: str,
+        time_index: Optional[List[datetime.datetime]] = None,
+        report_only: bool = False,
+    ) -> numpy.ndarray:
         from ecl._native.summary import ecl_sum_to_numpy
-        return ecl_sum_to_numpy(self, key=key, time_index=time_index, report_only=report_only)
+
+        return ecl_sum_to_numpy(
+            self, key=key, time_index=time_index, report_only=report_only
+        )
 
     def numpy_vector(self, key, time_index=None, report_only=False):
         """Will return numpy vector of all the values corresponding to @key.
@@ -512,18 +521,7 @@ class EclSum(BaseCClass):
             else:
                 raise ValueError("Can not suuply both time_index and report_only=True")
 
-        return self.to_numpy(key, time_index, report_only)
-        # if time_index is None:
-        #     return self.to_numpy(key, time_index, report_only)
-        # else:
-        #     time_vector = self._make_time_vector(time_index)
-        #     np_vector = numpy.zeros(len(time_vector))
-        #     self._init_numpy_vector_interp(
-        #         key,
-        #         time_vector,
-        #         np_vector.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
-        #     )
-        #     return np_vector
+        return self.to_numpy(key, time_index, report_only).astype(numpy.float64)
 
     @property
     def numpy_dates(self):

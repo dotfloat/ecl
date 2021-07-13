@@ -79,7 +79,7 @@ skbuild.setup(
         # we can safely pass OSX_DEPLOYMENT_TARGET as it's ignored on
         # everything not OS X. We depend on C++11, which makes our minimum
         # supported OS X release 10.9
-        "-DCMAKE_OSX_DEPLOYMENT_TARGET=10.9",
+        "-DCMAKE_OSX_DEPLOYMENT_TARGET=10.13",
     ],
     # skbuild's test imples develop, which is pretty obnoxious instead, use a
     # manually integrated pytest.

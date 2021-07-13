@@ -1,10 +1,8 @@
 #pragma
 
-
 typedef struct ecl_smspec_struct ecl_smspec_type;
 typedef struct ecl_sum_data_struct ecl_sum_data_type;
 typedef struct ecl_sum_struct ecl_sum_type;
-
 
 #define ECL_SUM_ID 89067
 

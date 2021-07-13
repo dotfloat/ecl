@@ -7,6 +7,10 @@ include(TestBigEndian)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
+# set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer
+# -fsanitize=address") set (CMAKE_LINKER_FLAGS_DEBUG
+# "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
+
 # -----------------------------------------------------------------
 
 set(ECL_VERSION_MAJOR 0)
@@ -406,4 +410,22 @@ if(NOT SKBUILD)
   install(EXPORT ecl-config DESTINATION share/cmake/ecl)
   export(TARGETS ecl FILE eclConfig.cmake)
   export(PACKAGE ecl)
+endif()
+
+if(NOT SKBUILD)
+  install(
+    TARGETS ecl
+    EXPORT ecl-config
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+  install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+  install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/include/
+          DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+else()
+  install(TARGETS ecl LIBRARY DESTINATION python/ecl/.libs)
+  install(TARGETS _native DESTINATION python/ecl)
+  install(DIRECTORY lib/include/ DESTINATION python/ecl/.include)
+  install(DIRECTORY ${CMAKE_BINARY_DIR}/lib/include/
+          DESTINATION python/ecl/.include)
 endif()

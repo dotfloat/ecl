@@ -399,7 +399,8 @@ int ecl_sum_file_data::get_time_report(int end_index, time_t *data) {
 void ecl_sum_file_data::get_data(int params_index, int length, float *data) {
     if (this->loader) {
         const auto tmp_data = loader->get_vector(params_index);
-        memcpy(data, tmp_data.data(), length * sizeof data);
+        // memcpy(data, tmp_data.data(), length * sizeof float);
+        std::copy(tmp_data.cbegin(), tmp_data.cend(), data);
     } else {
         for (int time_index = 0; time_index < length; time_index++)
             data[time_index] = this->iget(time_index, params_index);

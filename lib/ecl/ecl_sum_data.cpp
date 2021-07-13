@@ -649,11 +649,11 @@ static double ecl_sum_data_interp_get(const ecl_sum_data_type *data,
            ecl_sum_data_iget(data, time_index2, params_index) * weight2;
 }
 
-static double ecl_sum_data_vector_iget(const ecl_sum_data_type *data,
-                                       time_t sim_time, int params_index,
-                                       bool is_rate, int time_index1,
-                                       int time_index2, double weight1,
-                                       double weight2) {
+extern "C" double ecl_sum_data_vector_iget(const ecl_sum_data_type *data,
+                                           time_t sim_time, int params_index,
+                                           bool is_rate, int time_index1,
+                                           int time_index2, double weight1,
+                                           double weight2) {
 
     double value = 0.0;
     if (is_rate) {
@@ -942,7 +942,7 @@ void ecl_sum_data_init_double_vector(const ecl_sum_data_type *data,
     auto len = data->index.length();
     auto output_data_f32 = std::make_unique<float[]>(len);
     ecl_sum_data_init_float_vector__(data, params_index, output_data_f32.get(),
-                                      false);
+                                     false);
     std::copy_n(output_data_f32.get(), len, output_data);
 }
 
@@ -960,7 +960,7 @@ ecl_sum_data_alloc_data_vector(const ecl_sum_data_type *data, int params_index,
         throw std::out_of_range("Out of range");
 
     ecl_sum_data_init_float_vector__(data, params_index, output_data.data(),
-                                      report_only);
+                                     report_only);
     double_vector_type *data_vector =
         double_vector_alloc(output_data.size(), 0);
 

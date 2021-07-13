@@ -15,7 +15,7 @@ typedef struct ecl_sum_tstep_struct ecl_sum_tstep_type;
 
 namespace ecl {
 
-    class unsmry_loader;
+class unsmry_loader;
 
 struct IndexNode {
 

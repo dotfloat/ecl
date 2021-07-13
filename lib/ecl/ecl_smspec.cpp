@@ -101,7 +101,6 @@
 
 #define PARAMS_GLOBAL_DEFAULT -99
 
-
 /**
 About indexing:
 ---------------

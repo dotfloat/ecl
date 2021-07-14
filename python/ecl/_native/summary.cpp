@@ -67,7 +67,7 @@ const ecl::smspec_node &_get_smspec_by_name(const ecl_sum_type *sum,
     const auto &index = sum->smspec->gen_var_index;
     auto it = index.find(key.c_str());
     if (it == index.end())
-        throw std::out_of_range("Invalid lookup summary object");
+        throw py::key_error("No such key");
     return *it->second;
 }
 
@@ -78,16 +78,25 @@ const ecl::smspec_node &_get_node_by_params_index(const ecl_smspec_type *smspec,
 }
 } // namespace
 
-py::array interpolated(const ecl_sum_data_type *data, const ecl::smspec_node &smspec,
-                       const vector<system_clock::time_point> &time_points) {
+/**
+ * @brief Generate a numpy 1d-array at the specified time points
+ */
+py::array to_numpy(py::object self, const std::string &key,
+                   const vector<system_clock::time_point> &time_points) {
+    const auto ecl_sum = _get_object_from_cwrap<ecl_sum_type>(self);
+    const auto data = ecl_sum->data;
+    const auto &smspec = _get_smspec_by_name(ecl_sum, key);
+
     time_t start_time = ecl_sum_data_get_data_start(data);
     time_t end_time = ecl_sum_data_get_sim_end(data);
     float start_value = 0;
     float end_value = 0;
 
     if (!smspec.is_rate()) {
-        start_value = ecl_sum_data_iget_first_value(data, smspec.get_params_index());
-        end_value = ecl_sum_data_iget_last_value(data, smspec.get_params_index());
+        start_value =
+            ecl_sum_data_iget_first_value(data, smspec.get_params_index());
+        end_value =
+            ecl_sum_data_iget_last_value(data, smspec.get_params_index());
     }
 
     py::array_t<float, py::array::c_style> array(time_points.size());
@@ -105,9 +114,9 @@ py::array interpolated(const ecl_sum_data_type *data, const ecl::smspec_node &sm
             double weight1, weight2;
             ecl_sum_data_init_interp_from_sim_time(
                 data, sim_time, &time_index1, &time_index2, &weight1, &weight2);
-            value = ecl_sum_data_vector_iget(data, sim_time, smspec.get_params_index(),
-                                             smspec.is_rate(), time_index1, time_index2,
-                                             weight1, weight2);
+            value = ecl_sum_data_vector_iget(
+                data, sim_time, smspec.get_params_index(), smspec.is_rate(),
+                time_index1, time_index2, weight1, weight2);
         }
 
         output_data[i] = value;
@@ -115,21 +124,44 @@ py::array interpolated(const ecl_sum_data_type *data, const ecl::smspec_node &sm
     return std::move(array);
 }
 
-py::array
-ecl_sum_to_numpy(py::object self, const std::string &key,
-                 const optional<vector<system_clock::time_point>> &time_index,
-                 bool report_only) {
-    auto ecl_sum = _get_object_from_cwrap<ecl_sum_type>(self);
-
+/**
+ * @brief Generate a numpy array report_only
+ */
+py::array to_numpy_report_only(py::object self, const std::string &key) {
+    const auto ecl_sum = _get_object_from_cwrap<ecl_sum_type>(self);
+    const auto data = ecl_sum->data;
     const auto &smspec = _get_smspec_by_name(ecl_sum, key);
 
-    auto data = ecl_sum->data;
+    size_t size = 1 + ecl_sum_data_get_last_report_step(data) -
+                  ecl_sum_data_get_first_report_step(data);
 
-    if (time_index.has_value()) {
-        return interpolated(data, smspec, time_index.value());
+    py::array_t<float, py::array::c_style> array(size);
+    int offset = 0;
+    auto output_data = array.mutable_data();
+    for (const auto &index_node : data->index) {
+        const auto &data_file = data->data_files[index_node.data_index];
+        const auto &params_map = index_node.params_map;
+        int params_index = params_map[smspec.get_params_index()];
+
+        const ecl::smspec_node &smspec_node =
+            _get_node_by_params_index(data->smspec, smspec.get_params_index());
+        float default_value = smspec_node.get_default();
+        offset +=
+            data_file->get_data_report(params_index, index_node.length,
+                                       &output_data[offset], default_value);
     }
 
-    // ecl_sum_data_init_double_vector__ from ecl_sum_data.cpp@898
+    return std::move(array);
+}
+
+/**
+ * @brief Generate a numpy array
+ */
+py::array to_numpy(py::object self, const std::string &key) {
+    const auto ecl_sum = _get_object_from_cwrap<ecl_sum_type>(self);
+    const auto data = ecl_sum->data;
+    const auto &smspec = _get_smspec_by_name(ecl_sum, key);
+
     py::array_t<float, py::array::c_style> array(data->index.length());
     int offset = 0;
     auto output_data = array.mutable_data();
@@ -142,8 +174,8 @@ ecl_sum_to_numpy(py::object self, const std::string &key,
             data_file->get_data(params_index, index_node.length,
                                 &output_data[offset]);
         else {
-            const ecl::smspec_node &smspec_node =
-                _get_node_by_params_index(data->smspec, smspec.get_params_index());
+            const ecl::smspec_node &smspec_node = _get_node_by_params_index(
+                data->smspec, smspec.get_params_index());
             for (int i = 0; i < index_node.length; i++)
                 output_data[offset + i] = smspec_node.get_default();
         }
@@ -153,7 +185,29 @@ ecl_sum_to_numpy(py::object self, const std::string &key,
     return std::move(array);
 }
 
+// py::object to_time_keyword_array(py::object self, const vector<string>& keys) {
+//     auto ecl_sum = _get_object_from_cwrap<ecl_sum_type>(self);
+
+//     py::array_t<float, py::array::c_style> array{keys.size()};
+// }
+
 void _native_summary(py::module_ m) {
-    m.def("ecl_sum_to_numpy", &ecl_sum_to_numpy, py::arg("self"),
-          py::arg("key"), py::arg("time_index"), py::arg("report_only"));
+    using time_index_t = optional<vector<system_clock::time_point>>;
+
+    m.def(
+        "to_numpy",
+        [](py::object self, std::string &key, const time_index_t &time_index,
+           bool report_only) -> py::array {
+            if (time_index && report_only)
+                throw std::invalid_argument(
+                    "Either time_index=None or report_only=False");
+            if (time_index)
+                return to_numpy(self, key, *time_index);
+            if (report_only)
+                return to_numpy_report_only(self, key);
+            else
+                return to_numpy(self, key);
+        },
+        py::arg{"self"}, py::arg{"key"}, py::arg{"time_index"},
+        py::arg{"report_only"});
 }

@@ -174,7 +174,6 @@ class ecl_sum_file_data;
 
 typedef struct ecl_sum_data_struct {
     const ecl_smspec_type *smspec;
-    std::vector<ecl::ecl_sum_file_data *>
-        data_files; // List of ecl_sum_file_data instances
+    std::vector<ecl::ecl_sum_file_data *> data_files;
     detail::CaseIndex index;
 } ecl_sum_data_type;

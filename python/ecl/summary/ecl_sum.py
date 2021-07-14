@@ -35,6 +35,7 @@ import re
 # index as the first argument and the key/key_index as second
 # argument. In the python code this order has been reversed.
 from cwrap import BaseCClass, CFILE
+from pandas._testing import to_array
 
 from ecl.util.util import monkey_the_camel
 from ecl.util.util import StringList, CTime, DoubleVector, TimeVector, IntVector
@@ -44,6 +45,7 @@ from ecl.summary import EclSumVarType
 from ecl.summary.ecl_sum_vector import EclSumVector
 from ecl.summary.ecl_smspec_node import EclSMSPECNode
 from ecl import EclPrototype, EclUnitTypeEnum
+from ecl._native import summary as _native
 
 # , EclSumKeyWordVector
 
@@ -483,9 +485,7 @@ class EclSum(BaseCClass):
         time_index: Optional[List[datetime.datetime]] = None,
         report_only: bool = False,
     ) -> numpy.ndarray:
-        from ecl._native.summary import ecl_sum_to_numpy
-
-        return ecl_sum_to_numpy(
+        return _native.to_numpy(
             self, key=key, time_index=time_index, report_only=report_only
         )
 
@@ -512,15 +512,6 @@ class EclSum(BaseCClass):
         ValueError exception.
 
         """
-        if key not in self:
-            raise KeyError("No such key:%s" % key)
-
-        if report_only:
-            if time_index is None:
-                time_index = self.report_dates
-            else:
-                raise ValueError("Can not suuply both time_index and report_only=True")
-
         return self.to_numpy(key, time_index, report_only).astype(numpy.float64)
 
     @property

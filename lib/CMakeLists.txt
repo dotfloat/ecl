@@ -208,9 +208,11 @@ if(ERT_USE_OPENMP)
   target_link_libraries(ecl PUBLIC ${OpenMP_EXE_LINKER_FLAGS})
 endif()
 
+if(NOT SKBUILD)
 set_target_properties(
   ecl PROPERTIES VERSION ${ECL_VERSION_MAJOR}.${ECL_VERSION_MINOR}
                  SOVERSION ${ECL_VERSION_MAJOR})
+endif()
 
 if(NOT BUILD_TESTS)
   return()

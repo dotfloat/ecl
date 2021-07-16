@@ -575,35 +575,16 @@ class EclSum(BaseCClass):
               2010-04-01    672.7      620.4     78.7
               ....
         """
-        from ecl.summary import EclSumKeyWordVector
-
         if column_keys is None:
-            keywords = EclSumKeyWordVector(self, add_keywords=True)
-        else:
-            keywords = EclSumKeyWordVector(self)
-            for key in column_keys:
-                keywords.add_keywords(key)
-
-        if len(keywords) == 0:
-            raise ValueError("No valid key")
+            column_keys = self.keys()
 
         if time_index is None:
             time_index = self.numpy_dates
-            data = numpy.zeros([len(time_index), len(keywords)])
-            EclSum._init_pandas_frame(
-                self, keywords, data.ctypes.data_as(ctypes.POINTER(ctypes.c_double))
-            )
+            data = _native.to_dataframe_values(self, column_keys)
         else:
-            time_points = self._make_time_vector(time_index)
-            data = numpy.zeros([len(time_points), len(keywords)])
-            EclSum._init_pandas_frame_interp(
-                self,
-                keywords,
-                time_points,
-                data.ctypes.data_as(ctypes.POINTER(ctypes.c_double)),
-            )
+            data = _native.to_dataframe_values_interp(self, column_keys, time_index)
 
-        frame = pandas.DataFrame(index=time_index, columns=list(keywords), data=data)
+        frame = pandas.DataFrame(index=time_index, columns=column_keys or self.keys(), data=data)
         return frame
 
     @staticmethod

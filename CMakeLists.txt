@@ -428,4 +428,7 @@ else()
   install(DIRECTORY lib/include/ DESTINATION python/ecl/.include)
   install(DIRECTORY ${CMAKE_BINARY_DIR}/lib/include/
           DESTINATION python/ecl/.include)
+  if (apps)
+    install(TARGETS ${apps} RUNTIME DESTINATION python/ecl/.bin)
+  endif()
 endif()
